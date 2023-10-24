@@ -13,6 +13,7 @@ export const baseEventTypeSelect = Prisma.validator<Prisma.EventTypeSelect>()({
   currency: true,
   requiresConfirmation: true,
   requiresBookerEmailVerification: true,
+  roundRobinHostCount: true,
 });
 
 export const bookEventTypeSelect = Prisma.validator<Prisma.EventTypeSelect>()({

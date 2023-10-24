@@ -130,6 +130,7 @@ export type FormValues = {
   bookingLimits?: IntervalLimit;
   children: ChildrenEventType[];
   hosts: { userId: number; isFixed: boolean }[];
+  roundRobinHostCount: number;
   bookingFields: z.infer<typeof eventTypeBookingFields>;
   availability?: AvailabilityOption;
   bookerLayouts: BookerLayoutSettings;
@@ -263,6 +264,7 @@ const EventTypePage = (props: EventTypeSetupProps) => {
       minimumBookingNotice: eventType.minimumBookingNotice,
       metadata,
       hosts: eventType.hosts,
+      roundRobinHostCount: eventType.roundRobinHostCount,
       children: eventType.children.map((ch) => ({
         ...ch,
         created: true,
@@ -471,6 +473,7 @@ const EventTypePage = (props: EventTypeSetupProps) => {
               locations,
               metadata,
               customInputs,
+              roundRobinHostCount,
               // We don't need to send send these values to the backend
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               seatsPerTimeSlotEnabled,
@@ -511,6 +514,7 @@ const EventTypePage = (props: EventTypeSetupProps) => {
               length,
               locations,
               recurringEvent,
+              roundRobinHostCount: Number(roundRobinHostCount),
               periodStartDate: periodDates.startDate,
               periodEndDate: periodDates.endDate,
               periodCountCalendarDays: periodCountCalendarDays === "1",

@@ -82,10 +82,28 @@ async function leastRecentlyBookedUser<T extends Pick<User, "id" | "email">>({
     return aggregate;
   }, {});
 
-  const userIdAndAtCreatedPair = {
-    ...organizerIdAndAtCreatedPair,
-    ...attendeeUserIdAndAtCreatedPair,
-  };
+  const userIdAndAtCreatedPair = {};
+
+  // in case a user was an attendee and a host we want to choose the latest booking
+  // in which he participated
+  for (const key in organizerIdAndAtCreatedPair) {
+    if (!attendeeUserIdAndAtCreatedPair.hasOwnProperty(key)) {
+      userIdAndAtCreatedPair[key] = organizerIdAndAtCreatedPair[key];
+      break;
+    }
+    if (organizerIdAndAtCreatedPair[key] > attendeeUserIdAndAtCreatedPair[key]) {
+      userIdAndAtCreatedPair[key] = organizerIdAndAtCreatedPair[key];
+    } else {
+      userIdAndAtCreatedPair[key] = attendeeUserIdAndAtCreatedPair[key];
+    }
+  }
+
+  // add attendees that weren't hosts
+  for (const key in attendeeUserIdAndAtCreatedPair) {
+    if (!organizerIdAndAtCreatedPair.hasOwnProperty(key)) {
+      userIdAndAtCreatedPair[key] = attendeeUserIdAndAtCreatedPair[key];
+    }
+  }
 
   if (!userIdAndAtCreatedPair) {
     throw new Error("Unable to find users by availableUser ids."); // should never happen.
